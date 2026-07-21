@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme variables — dark is the default/primary theme (matches the
+   reference design); light is a real, functioning alternative, not an
+   afterthought. Swapped via [data-theme] on <html>, set by ThemeProvider. */
+:root,
+[data-theme="dark"] {
+  --bg: #06090f;
+  --nav: #080c18;
+  --card: #0f1623;
+  --card2: #141d2e;
+  --border: #1e2d45;
+  --border2: #253554;
+  --gold: #d4a843;
+  --gold2: #f5c842;
+  --blue: #38bdf8;
+  --blue2: #0ea5e9;
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+  --purple: #a78bfa;
+  --text: #e2e8f0;
+  --text2: #cbd5e1;
+  --muted: #64748b;
+  --cyan: #38bdf8;
+  --cyan2: #0c2d3e;
+}
+
+[data-theme="light"] {
+  --bg: #f0f4f8;
+  --nav: #ffffff;
+  --card: #ffffff;
+  --card2: #f8fafc;
+  --border: #e2e8f0;
+  --border2: #cbd5e1;
+  --gold: #b8860b;
+  --gold2: #c9a227;
+  --blue: #0284c7;
+  --blue2: #0369a1;
+  --green: #16a34a;
+  --red: #dc2626;
+  --yellow: #d97706;
+  --purple: #7c3aed;
+  --text: #0f172a;
+  --text2: #1e293b;
+  --muted: #64748b;
+  --cyan: #0284c7;
+  --cyan2: #e0f2fe;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg text-foreground font-sans font-body antialiased;
+    transition: background-color 0.25s, color 0.2s;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading text-foreground;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border2);
+    border-radius: 4px;
+  }
+
+  @keyframes ticker-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

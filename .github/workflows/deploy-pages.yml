@@ -1,0 +1,60 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          # No `cache: "npm"` here — that requires a package-lock.json,
+          # which isn't committed yet (see comment on the next step).
+
+      # `npm install`, not `npm ci` — no package-lock.json is committed
+      # yet. Commit one (run `npm install` locally once) and switch this
+      # to `npm ci` for faster, reproducible builds.
+      - run: npm install
+
+      - name: Build static export
+        env:
+          # Repo name becomes the GitHub Pages base path, e.g.
+          # https://<user>.github.io/nepse-platform/ -> basePath "/nepse-platform".
+          # See next.config.ts for how this is consumed.
+          NEXT_BASE_PATH: /${{ github.event.repository.name }}
+        run: npm run build
+
+      # Next static export writes to ./out — Pages needs a .nojekyll file
+      # or it silently drops any file/folder starting with an underscore
+      # (Next's chunk files use _next/).
+      - run: touch out/.nojekyll
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
