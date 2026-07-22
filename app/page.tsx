@@ -58,7 +58,7 @@ export default async function LandingPage() {
             <div className="mt-7">
               <SectionHeader eyebrow="Portfolio" title="My investments" />
               <div className="mt-3">
-                <PortfolioWidget />
+                <PortfolioWidget stocks={stocks} />
               </div>
             </div>
 

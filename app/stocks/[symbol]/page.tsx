@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/layout/PageShell";
 import { CapSizeBadge } from "@/components/ui/Badge";
+import { WatchlistToggle } from "@/components/market/WatchlistToggle";
 import { getAllStocks, getStockBySymbol } from "@/lib/stocks";
 import { formatCompactMarketCap, formatNPR, formatPercent } from "@/lib/format";
 
@@ -58,7 +59,10 @@ export default async function StockDetailPage({ params }: StockPageProps) {
             <h1 className="text-3xl font-heading text-foreground">{stock.symbol}</h1>
             <p className="mt-1 text-lg font-body text-muted">{formatNPR(stock.ltp)}</p>
           </div>
-          <CapSizeBadge capSize={stock.capSize} />
+          <div className="flex flex-col items-end gap-2">
+            <CapSizeBadge capSize={stock.capSize} />
+            <WatchlistToggle symbol={stock.symbol} />
+          </div>
         </div>
 
         <div className="mt-8 rounded-card border border-border bg-surface p-6 shadow-card">

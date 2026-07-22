@@ -7,10 +7,12 @@ interface ComingSoonSectionProps {
 
 /**
  * Used for routes that are linked from the nav/footer but not built yet
- * (screener, portfolio, news, signup, about, contact, terms, privacy).
- * A real, honest "not built yet" page — not a fabricated feature — so
- * these links are functional (no 404) without pretending the feature
- * exists. Swap each usage out for real content as that page gets built.
+ * (news, about, contact). A real, honest "not built yet" page — not a
+ * fabricated feature — so these links are functional (no 404) without
+ * pretending the feature exists. Swap each usage out for real content as
+ * that page gets built. (Screener and Portfolio moved off this component
+ * once they became genuinely functional — see Screener.tsx and
+ * WatchlistManager.tsx.)
  */
 export function ComingSoonSection({ title, description }: ComingSoonSectionProps) {
   return (

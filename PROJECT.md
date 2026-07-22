@@ -7,6 +7,39 @@ market data. Nepal-specific: NPR currency formatting, NPT timezone, NEPSE
 sector taxonomy, no assumptions carried over from Indian/US market structure.
 
 ## Current Features (built)
+- **Screener and Portfolio/Watchlist are now genuinely functional** —
+  entirely client-side, backed by the same `data/stocks.json` that already
+  powers the rest of the site, no backend/database/hosting required:
+  - `components/market/Screener.tsx` — real filter (symbol, cap-size, min
+    market cap, min EPS) and sortable columns over all 280 stocks.
+  - `lib/watchlist.ts` + `WatchlistManager.tsx` + `PortfolioWidget.tsx` +
+    `WatchlistToggle.tsx` — a real add/remove watchlist backed by
+    `localStorage`. Persists across visits, scoped to one browser (no
+    login exists, so this doesn't pretend to sync across devices).
+  - `/signup` no longer dead-ends in "coming soon" — it explains why no
+    account is needed for the current feature set.
+  - This was a deliberate pivot away from deploying the FastAPI/Postgres
+    backend (see "Backend deployment" below) after hitting real friction
+    with free-hosting platforms requiring credit cards (Render) or closing
+    signups (Koyeb, post-Mistral-acquisition) or requiring cards outright
+    (Fly.io). The backend still exists and still works — it's just not the
+    dependency for Screener/Portfolio anymore.
+- **Backend is now deploy-ready for Render (free tier) + Neon (free,
+  permanent Postgres tier)**: fixed two real blockers found while
+  preparing this — (1) `seed_stocks.py` read `data/stocks.json` from
+  *outside* `backend/`, which wouldn't exist in a Docker build scoped to
+  `backend/` as its context (e.g. Render's "Root Directory" setting); now
+  copied to `backend/data/stocks.json` and the script points there. (2)
+  `Dockerfile`/`start.sh` now runs `alembic upgrade head` and both seed
+  scripts automatically on every boot (idempotent, safe to repeat) and
+  binds to `$PORT` instead of a hardcoded 8000 — Render assigns its own
+  port dynamically. Redis is configured but never actually connected to
+  anywhere in the code (rate limiting uses in-memory storage), so no
+  separate Redis service is needed for deployment.
+- Remember to set `CORS_ALLOWED_ORIGINS` on whatever host runs the backend
+  to include the real frontend origin (e.g.
+  `["https://fintechwhiz.github.io"]`) — the default only allows
+  `localhost:3000`, which would silently block the deployed frontend.
 - **Redesigned to match the user's preferred reference design** (a dark
   dashboard-style layout: sticky ticker bar, dark navbar with gold/blue
   brand gradient, hero stat cards, market-segments grid, portfolio widget,

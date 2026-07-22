@@ -110,10 +110,10 @@ export function Navbar({ stocks }: NavbarProps) {
           </Link>
         ))}
         <Link
-          href="/signup"
+          href="/portfolio"
           className="ml-1 whitespace-nowrap rounded-[7px] bg-primary px-3 py-1.5 text-xs font-button text-nav transition-opacity hover:opacity-90"
         >
-          Sign Up
+          ★ Watchlist
         </Link>
       </nav>
 

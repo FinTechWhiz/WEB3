@@ -1,7 +1,13 @@
 """
-Seeds the stocks table from ../data/stocks.json — the same real NEPSE
-fundamentals data (280 symbols) that powers the frontend. Safe to re-run:
-upserts by symbol instead of duplicating rows.
+Seeds the stocks table from backend/data/stocks.json — a copy of the same
+real NEPSE fundamentals data (280 symbols) that powers the frontend, kept
+inside backend/ so the backend is self-contained: a Docker build with
+build context = backend/ (e.g. Render's "Root Directory" setting) still
+has this file, unlike the frontend's copy one level up in ../data/. Safe
+to re-run: upserts by symbol instead of duplicating rows.
+
+If you regenerate the frontend's data/stocks.json (e.g. from an updated
+workbook), copy it here too: cp ../data/stocks.json backend/data/stocks.json
 
 Usage:
     python -m scripts.seed_stocks
@@ -16,7 +22,7 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models import Stock
 
-DATA_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "stocks.json"
+DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "stocks.json"
 
 
 def seed_stocks(db: Session) -> None:
